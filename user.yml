@@ -1,0 +1,19 @@
+---
+- name: user
+  hosts: demo
+  # ===============
+  vars: 
+    user1: riser1
+  vars_files:
+    - ./my_vars.yml
+  # ===============
+  tasks:
+    - name: Create user
+      # ===============
+      vars:
+        user: riser
+      # ===============
+      user:
+        name: "{{ user }}"
+        state: present
+      become: true
