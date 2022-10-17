@@ -1,19 +1,28 @@
 ---
 - name: user
   hosts: demo
-  # ===============
-  vars: 
-    user1: riser1
-  vars_files:
-    - ./my_vars.yml
-  # ===============
   tasks:
-    - name: Create user
-      # ===============
-      vars:
-        user: riser
-      # ===============
-      user:
-        name: "{{ user }}"
-        state: present
+    - name: Preconfig block
+      block:
+        - name: Create user
+          vars:
+            user: riser
+          user:
+            name: "{{ user_fuck }}"
+            state: present
+          register: error
+        - name: Install curl
+          apt: 
+            name: "curl"
+            update-cache: true
+          register: error
       become: true
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      rescue:
+        - name: Some error print
+          debug: 
+            var: error      
+      always:
+        - name: Reboot
+          debug:
+            msg: "Rebooting"
